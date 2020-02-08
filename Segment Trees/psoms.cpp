@@ -18,7 +18,7 @@ struct Node{
     ll l,r,b,s;
 };   
 
-struct SegTrie{
+struct SegTree{
     Node t[2*MAXN+5];
 
     void update(int x, ll val){
@@ -35,7 +35,7 @@ struct SegTrie{
     }
 };
 
-SegTrie trie;
+SegTree tree;
 int n,q;
 
 int main(){
@@ -43,14 +43,14 @@ int main(){
     for(int i = 1; i <= n; i++){
         ll x;
         scanf("%lld", &x);
-        trie.update(i,x);
+        tree.update(i,x);
     }
     scanf("%d", &q);
     while(q--){
         char type;
         int a, b;
         scanf(" %c%d%d", &type, &a, &b);
-        if(type == 'Q') printf("%lld\n", trie.query(a,b).b);
-        else            trie.update(a,b);
+        if(type == 'Q') printf("%lld\n", tree.query(a,b).b);
+        else            tree.update(a,b);
     }
 }
