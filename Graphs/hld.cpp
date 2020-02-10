@@ -1,185 +1,174 @@
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
-const ll MAXN = 5e4+5;
-
-int n,k;
-
-vector<int> adj[MAXN], heavy[MAXN];
-set<pair<int,int>> heavyEdges;
-int singleChanges[MAXN], subTreeSize[MAXN], parent[MAXN];
-pair<int,int> treeOverNode[MAXN];
-bool vis[MAXN];
-
-int pre[MAXN], cpre = 0, post[MAXN], cpost = 0;
+const ll MAXN = 500005, LOG = 35, INF = (1LL<<60LL);
 
 struct SegTree{
-	SegTree(int _base):base(_base){
-		t.resize(base<<1,0);
-	}
+    SegTree(int _base){
+        while(base < _base+1) base <<= 1;
+        t.resize(base<<1,0),l.resize(base<<1,0);
+    }
 
-	int base;
-	vector<int> t;
-	unordered_set<int> includedNodes;
-	int highest;
+    int base = 1;
+    vector<ll> t,l;
+    unordered_set<int> nodes;
+    int best;
 
-	void update(int a, int b, int val, int low = 0, int high = -1, int u = 1){
-		if(high == -1)	high = base-1;
-		if(a > high || b < low)	return;
-		if(a <= low && high <= b){
-			t[u] += val;
-			return;
-		}
-		int mid = (low+high)>>1;
-		update(a,b,val,low,mid,u<<1);
-		update(a,b,val,mid+1,high,u<<1|1);
-	}
+    void lazy(int u){
+        t[u] += l[u];
+        if(u < base)    l[u<<1] += l[u], l[u<<1|1] += l[u];
+        l[u] = 0;
+    }
 
-	int query(int x){
-		int res = 0;
-		for(x += base; x > 0; x >>= 1)	res += t[x];
-		return res;
-	}
+    void update(int a, int b, ll val, int low = 0, int high = -1, int u = 1){
+        lazy(u);
+        if(high == -1)  high = base-1;
+        if(a > high || b < low) return;
+        if(a <= low && high <= b){
+            l[u] += val, lazy(u);
+            return;
+        }
+        int mid = (low+high)>>1;
+        update(a,b,val,low,mid,u<<1), update(a,b,val,mid+1,high,u<<1|1);
+    }
+
+    ll query(int a, int b, int low = 0, int high = -1, int u = 1){
+        lazy(u);
+        if(high == -1)  high = base-1;
+        if(a > high || b < low)     return -INF;
+        if(a <= low && high <= b)   return t[u];
+        int mid = (low+high)>>1;
+        return max(query(a,b,low,mid,u<<1), query(a,b,mid+1,high,u<<1|1));
+    }
 };
 
-vector<SegTree> hldTrees;
+int n,q;
+vector<int> adj[MAXN];
 
-void dfs(int u){
-	vis[u] = true;
-	pre[u] = cpre++;
-	subTreeSize[u] = 1;
-	
-	int heaviest = -1;
-	int heaviestSts;
+struct HLDTree{
+    vector<SegTree> trees;
+    vector<int> heavy[MAXN]; 
+    set<pair<int,int>> heavy_edges;
+    pair<int,int> node_id[MAXN];
+    bool vis[MAXN];
+    int size[MAXN], p[MAXN], up[MAXN][LOG], pre[MAXN], post[MAXN], cnt = 0;
+    ll light[MAXN];
 
-	for(int v : adj[u]){
-		if(!vis[v] && v != parent[u]){
-			parent[v] = u;
-			dfs(v);
-			subTreeSize[u] += subTreeSize[v];
-			if(heaviest == -1 || subTreeSize[v] > heaviestSts){
-				heaviest = v;
-				heaviestSts = subTreeSize[v];
-			}
-		}
-	}
-	if(heaviest != -1){
-		heavy[heaviest].push_back(u);
-		heavy[u].push_back(heaviest);
-		heavyEdges.insert({u,heaviest});
-		heavyEdges.insert({heaviest, u});
-	}
-	post[u] = cpost++;
-}
+    bool is_ancestor(int u, int v){return pre[u] < pre[v] && post[u] > post[v];}
 
-int tSize;
+    int lca(int u, int v){
+        if(is_ancestor(u, v))   return u;
+        if(is_ancestor(v, u))   return v;
+        for(int i = LOG-1; i >= 0; i--)
+            if(!is_ancestor(up[u][i], v))   u = up[u][i];
+        return up[u][0];
+    }
 
-int hldDfs(int u, unordered_set<int>* r, int nTree, int iteration = 0){
-	vis[u] = true;
-	tSize++;
-	r->insert(u);
-	treeOverNode[u] = {nTree, iteration};
-	int hmax = -1;
-	bool anyLeft = false;
-	for(int v : heavy[u]){
-		if(!vis[v]){
-			anyLeft = true;
-			hmax = max(hmax, hldDfs(v, r, nTree, iteration+1));
-		}
-	}
-	if(!anyLeft)	return u;
-	return hmax;
-}
+    void dfs(int u){
+        pre[u] = cnt++, size[u] = 1, up[u][0] = p[u];
+        for(int i = 1; i < LOG; i++) up[u][i] = up[up[u][i-1]][i-1];
 
-int jumps[MAXN][35];
+        int h = -1, h_size = -1;
+        for(int v : adj[u]){
+            if(v != p[u]){
+                p[v] = u, dfs(v), size[u] += size[v];
+                if(h == -1 || size[v] > h_size) h = v, h_size = size[v];
+            }
+        }
+        if(h != -1){
+            heavy[h].push_back(u), heavy[u].push_back(h);
+            heavy_edges.insert(make_pair(u,h)), heavy_edges.insert(make_pair(h,u));
+        }
+        post[u] = cnt++;
+    }
 
-void preCalcLca(){
-	for(int i = 0; i < 35; i++)	jumps[0][i] = -1;
-	for(int j = 1; j < n; j++) 	jumps[j][0] = parent[j];
-	for(int i = 1; i < 35; i++) 
-		for(int j = 1; j < n; j++){
-			if(jumps[j][i - 1] == -1)	jumps[j][i] = -1;
-			else 						jumps[j][i] = jumps[jumps[j][i - 1]][i - 1];
-		}
-}
+    int dfs_hld(int u, unordered_set<int> *h_nodes, int tree_id, int *tree_s, int id = 1){
+        vis[u] = true, (*tree_s)++, h_nodes->insert(u), node_id[u] = make_pair(tree_id, id);
+        int max_n = -1;
+        bool any = false;
+        for(int v : heavy[u]){
+            if(!vis[v]){
+                any = true;
+                max_n = max(max_n, dfs_hld(v, h_nodes, tree_id, tree_s, id+1));
+            }
+        }
+        if(any) return max_n;
+        return u;
+    }
 
-bool isAncestor(int x, int anc){
-	if(x == -1 || anc == -1)	return false;
-	return pre[anc] < pre[x] && post[anc] > post[x];
-}
+    void build(){
+        dfs(0);
+        for(int i = 0; i < n; i++){
+            if(vis[i] || heavy[i].size() != 1 || heavy[i][0] != p[i])    continue;
+            unordered_set<int> h_path;
+            int tree_s = 0, best = dfs_hld(i, &h_path, (int)trees.size(), &tree_s);
+            trees.emplace_back(tree_s);
+            trees.back().nodes = h_path, trees.back().best = best;
+        }
+    }
 
-int lca(int x, int y){
-	if(isAncestor(x, y))	return y;
-	if(isAncestor(y, x))	return x;
-	int jumpPow = 30;
-	while(true){
-		if(!isAncestor(y, x) && isAncestor(y, parent[x]))	break;
-		if(jumps[x][jumpPow] == -1 || isAncestor(y, jumps[x][jumpPow])) jumpPow--;
-		else x = jumps[x][jumpPow];
-	}	
-	return parent[x];
-}
+    void _update(int u, int anc, ll val){
+        while(u != anc){
+            while(!heavy_edges.count(make_pair(u,p[u])) && u != anc)    light[u]+=val, u = p[u];
+            if(u == anc)    break;
+            if(heavy_edges.count(make_pair(u,p[u]))){
+                SegTree* curr_tree = &trees[node_id[u].first];
+                if(curr_tree->nodes.count(anc)){
+                    curr_tree->update(node_id[u].second, node_id[anc].second, val);
+                    return;
+                }else   curr_tree->update(node_id[u].second, curr_tree->base, val);
+                u = p[curr_tree->best];
+            }else   u = p[u];
+        }
+    }
 
-void change(int x, int nParent){
-	while(x != nParent){
-		while(heavyEdges.find({x, parent[x]}) == heavyEdges.end() && x != nParent){
-			singleChanges[x]++;
-			x = parent[x];
-		}
-		if(x == nParent)	break;
-		if(heavyEdges.find({x,parent[x]}) != heavyEdges.end()){
-			SegTree* currentTree = &hldTrees[treeOverNode[x].first];
-			if(currentTree->includedNodes.find(nParent) != currentTree->includedNodes.end()){
-				currentTree->update(treeOverNode[x].second, treeOverNode[nParent].second-1,1);
-				return;
-			}else	currentTree->update(treeOverNode[x].second, currentTree->base-1, 1);
-			x = parent[currentTree->highest];
-		}else	x = parent[x];
-	}
-	return;
-}
+    void update(int u, int v, ll val=1){
+        int w = lca(u,v);
+        _update(u,w,val), _update(v,w,val), light[w]+=val;
+    }
+
+    ll _query(int u, int anc){
+        ll res = -INF;
+        while(u != anc){
+            while(!heavy_edges.count(make_pair(u,p[u])) && u != anc)    res = max(res, light[u]), u = p[u];
+            if(u == anc)    break;
+            if(heavy_edges.count(make_pair(u,p[u]))){
+                SegTree* curr_tree = &trees[node_id[u].first];
+                if(curr_tree->nodes.count(anc)){
+                    res = max(res, curr_tree->query(node_id[u].second, node_id[anc].second));
+                    return res;
+                }else   res = max(res, curr_tree->query(node_id[u].second, curr_tree->base));
+                u = p[curr_tree->best];
+            }else   u = p[u];
+        }
+        return res;
+    }
+
+    ll query(int u, int v){
+        int w = lca(u,v);
+        return max({_query(u,w),_query(w,v), light[w]});
+    }
+};
+
+HLDTree hld;
 
 int main(){
-	for(int i = 0; i < MAXN; i++)	treeOverNode[i] = {-1,-1};
-	cin >> n >> k;
-	for(int i = 0; i < n-1; i++){
-		int a,b;
-		cin >> a >> b;
-		a--,b--;
-		adj[a].push_back(b);
-		adj[b].push_back(a);
-	}
-	dfs(0);
-	fill(vis,vis+MAXN,false);
+    cin >> n;
+    for(int i = 0; i < n-1; i++){
+        int u, v;
+        cin >> u >> v;
+        u--, v--;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+    hld.build();
 
-	for(int i = 0; i < n; i++){
-		if(vis[i])	continue;
-		if(heavy[i].size() != 1)		continue;
-		if(heavy[i][0] != parent[i])	continue;
-		tSize = 0;
-		unordered_set<int> tset;
-		int chigh = hldDfs(i, &tset, (int)hldTrees.size());
-		int p = 1;
-		while(p < tSize)	p<<=1;
-		hldTrees.emplace_back(p);
-		hldTrees[hldTrees.size()-1].includedNodes = tset;
-		hldTrees[hldTrees.size()-1].highest = chigh;
-	}
-	preCalcLca();
-	for(int i = 0; i < k; i++){
-		int a,b;
-		cin >> a >> b;
-		a--,b--;
-		int u = lca(a,b);
-		if(a != u)	change(a,u);
-		if(b != u)	change(b,u);
-		singleChanges[u]++;
-	}
-
-	int maxFlow = -1;
-	for(int i = 0; i < n; i++){
-		if(treeOverNode[i].first != -1)	maxFlow = max(maxFlow, singleChanges[i] + hldTrees[treeOverNode[i].first].query(treeOverNode[i].second));
-		else  							maxFlow = max(maxFlow, singleChanges[i]);
-	}
-	cout << maxFlow << "\n";
+    cin >> q;
+    while(q--){
+        int type, u, v;
+        cin >> type >> u >> v;
+        u--,v--;
+        if(type == 1)   hld.update(u,v);
+        else            cout << hld.query(u,v) << "\n";
+    }
 }
