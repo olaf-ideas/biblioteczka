@@ -3,12 +3,12 @@ using namespace std;
 
 const int MAXN = 10005, ALF = 'z'-'a'+2, TRIE = MAXN*ALF;
 
-int n, trie[TRIE][ALF], cnt[TRIE], nodes = 1, ed[TRIE];
+int n, trie[TRIE][ALF], cnt[TRIE], nodes = 1, e[TRIE];
 
 void add(string& s, int i = 0, int node = 1){
     cnt[node]++;
     if(i == (int)s.size()){
-        ed[node]++;
+        e[node]++;
         return;
     }
     if(!trie[node][s[i]-'a'])   trie[node][s[i]-'a'] = ++nodes;
@@ -18,7 +18,7 @@ void add(string& s, int i = 0, int node = 1){
 void remove(string& s, int i = 0, int node = 1){
     cnt[node]--;
     if(i == (int)s.size()){
-        ed[node]--;
+        e[node]--;
         return;
     }
     remove(s, i+1, trie[node][s[i]-'a']);

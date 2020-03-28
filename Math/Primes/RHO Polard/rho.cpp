@@ -8,7 +8,6 @@ bool miller_rabin(ll a){
 
 ll rho_polard(ll n){
     if(!(n&1))  return 2;
-    //rand
     ll x, y, g = 1, a;
     x = rand()%n + 1, y = x, a = rand()%n+1;
     while(g == 1){

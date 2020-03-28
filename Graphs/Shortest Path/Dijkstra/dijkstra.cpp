@@ -1,47 +1,44 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long ll;
+using ll = long long;
 
-const int MAXN = 200005;
+const int N = 200005;
 const ll INF = (1LL<<60LL);
 
 int n, m;
-ll d[MAXN];
-vector<pair<int,ll>> adj[MAXN];
+vector<pair<int,ll>> adj[N];
+ll d[N];
 
-void dijkstra(int s){
-    priority_queue<pair<ll,int>> pq;
-    fill(d,d+n,INF);
-    d[s] = 0;
-    pq.push(make_pair(-d[s], s));
-    while(!pq.empty()){
-        int u = pq.top().second;
-        ll c = pq.top().first;
-        pq.pop();
-        if(d[u] < c)    continue;
-        for(const pair<int,ll>& e : adj[u]){
-            int v = e.first;
-            ll w = e.second;
-            if(d[v] > d[u]+w){
-                d[v] = d[u]+w;
-                pq.push(make_pair(-d[v],v));
-            } 
-        }
+vector<int> dijkstra(int s){
+  fill(d, d+n, INF);
+
+  priority_queue<pair<ll,int>> q;
+  q.push({0,s});
+  while(!q.empty()){
+    auto[c, u] = q.top();
+    q.pop();
+    if(c != d[u])   continue;
+    for(const auto&[v, w] : adj[u]){
+      if(d[v] > d[u] + w){
+        d[v] = d[u] + w;
+        q.push({d[v], v});
+      }
     }
+  }
 }
 
 int main(){
-    scanf("%d%d", &n, &m);
-    for(int i = 0; i < m; i++){
-        int u, v;
-        ll w;
-        scanf("%d%d%lld", &u, &v, &w);
-        u--, v--;
-        adj[u].push_back(make_pair(v, w));
-        adj[v].push_back(make_pair(u, w));
-    }
-    dijkstra(0);
-    printf("distance from 1: ");
-    for(int i = 0; i < n; i++)  printf("%d: %lld ", i+1, d[i]);
-    printf("\n");
+  ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
+  cin >> n >> m;
+  for(int i = 0; i < m; i++){
+    int u, v;
+    ll w;
+    cin >> u >> v >> w;
+    u--, v--;
+    adj[u].push_back(make_pair(v, w));
+    adj[v].push_back(make_pair(u, w));
+  }
+  dijkstra(0);
+  cout << "distance from 1:\n";
+  for(int i = 0; i < n; i++)  cout << i+1 << ": " << d[i] << "\n";
 }

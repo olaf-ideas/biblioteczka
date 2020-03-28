@@ -2,60 +2,59 @@
 using namespace std;
 
 struct Node{
-    map<char,Node*> son;
-    int cnt = 0;
-    bool end = false;
+    map<char,Node*> s;
+    int c = 0, e = 0;
 }root;
 
 struct Trie{
-    void add(string& s, int pos = 0, Node* node = &root){
-        node->cnt++;
-        if(pos == (int)s.size()){
-            node->end = true;          
-            return;
-        }
-        if(!node->son.count(s[pos]))    node->son[s[pos]] = new Node;
-        add(s, pos+1, node->son[s[pos]]);
+  void add(string& s, int i = 0, Node* n = &root){
+    n->c++;
+    if(i == (int)s.size()){
+        n->e++;
+        return;
     }
+    if(!n->s.count(s[i]))    n->s[s[i]] = new Node;
+    add(s,i+1,n->s[s[i]]);
+  }
 
-    bool check(string& s, int pos = 0, Node* node = &root){
-        if(pos == (int)s.size())    return node->end;
-        if(!node->son.count(s[pos]))    return false;
-        return check(s, pos+1, node->son[s[pos]]);
-    }
+  bool check(string& s, int i = 0, Node* n = &root){
+    if(i == (int)s.size())    return n->e;
+    if(!n->s.count(s[i]))   return false;
+    return check(s,i+1,n->s[s[i]]);
+  }
 
-    int cnt_pref(string& s, int pos = 0, Node* node = &root){
-        if(pos == (int)s.size())    return node->cnt;
-        if(!node->son.count(s[pos]))    return 0;
-        return cnt_pref(s, pos+1, node->son[s[pos]]);
-    }
+  void mini(string& r, Node* n = &root){
+    if(n->s.empty())    return;
+    r += n->s.begin()->first;
+    maxi(r,n->s.begin()->second);
+  }
 
-    void maxi(string& s, Node* node = &root){
-        if(!node->son.size())   return;
-        s += (*node->son.rbegin()).first;
-        maxi(s, (*node->son.rbegin()).second);
-    }
+  void maxi(string& r, Node* n = &root){
+    if(n->s.empty())    return;
+    r += n->s.rbegin()->first;
+    maxi(r,n->s.rbegin()->second);
+  }
 
-    void mini(string& s, Node* node = &root){
-        if(!node->son.size())   return;
-        s += (*node->son.begin()).first;
-        mini(s, (*node->son.begin()).second);
-    }
+  int cnt_pref(string& s, int i = 0, Node* n = &root){
+    if(i == (int)s.size())  return n->c;
+    if(!n->s.count(s[i]))   return 0;
+    return cnt_pref(s,i+1,n->s[s[i]]);
+  }
 };
 
-Trie trie;
+Trie t;
 int q;
 
 int main(){
-    cin >> q;
-    while(q--){
-        int type;
-        string s;
-        cin >> type >> s;
-        if(type == 0)   trie.add(s);
-        if(type == 1)   cout << trie.check(s) << "\n";
-        if(type == 2)   cout << trie.cnt_pref(s) << "\n";
-        if(type == 3)   s.clear(), trie.maxi(s), cout << s << "\n";
-        if(type == 4)   s.clear(), trie.mini(s), cout << s << "\n";
-    }
+  cin >> q;
+  while(q--){
+    int type;
+    string s;
+    cin >> type >> s;
+    if(type == 0)   t.add(s);
+    if(type == 1)   cout << t.check(s) << "\n";
+    if(type == 2)   cout << t.cnt_pref(s) << "\n";
+    if(type == 3)   s.clear(), t.maxi(s), cout << s << "\n";
+    if(type == 4)   s.clear(), t.mini(s), cout << s << "\n";
+  }
 }

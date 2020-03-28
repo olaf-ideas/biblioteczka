@@ -10,7 +10,7 @@ vector<int> seed;
 struct TreeIso{
     struct Hash{
         ll a, b, c;
-        Hash operator + (const ll &v) const {
+        Hash operator + const ll &v) const {
             return {a^v,b+v*v,c+v*v*v};
         }
         bool operator == (const Hash& h) const {
@@ -23,7 +23,7 @@ struct TreeIso{
     vector<Hash> h;
     int n;
 
-    TreeIso(int _n):n(n),s(n+5),id(n+5),adj(n+5),h(n+5){}
+    tree_iso(int _n):n(n),s(n+5),id(n+5),adj(n+5),h(n+5){}
 
     void build(){
         for(int i = 0; i < n-1; i++){
