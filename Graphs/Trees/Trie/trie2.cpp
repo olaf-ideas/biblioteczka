@@ -1,30 +1,25 @@
-#include <bits/stdc++.h>
+#include <string>
 using namespace std;
 
-const int MAXN = 10005, ALF = 'z'-'a'+2, TRIE = MAXN*ALF;
+const int S = 100005, ALF = 26;
 
-int n, trie[TRIE][ALF], cnt[TRIE], nodes = 1, e[TRIE];
+int t[S][ALF], c[S*ALF], cnt = 1, e[S*ALF];
 
-void add(string& s, int i = 0, int node = 1){
-    cnt[node]++;
-    if(i == (int)s.size()){
-        e[node]++;
-        return;
-    }
-    if(!trie[node][s[i]-'a'])   trie[node][s[i]-'a'] = ++nodes;
-    add(s, i+1, trie[node][s[i]-'a']);
+void add(const string& s){
+  int u = 0;
+  for(int i = 0; i < (int)s.size(); i++){
+    c[u]++;
+    if(!t[u][s[i]-'a']) t[u][s[i]-'a'] = ++cnt;
+    u = t[u][s[i]-'a'];
+  }
+  e[u]++;
 }
 
-void remove(string& s, int i = 0, int node = 1){
-    cnt[node]--;
-    if(i == (int)s.size()){
-        e[node]--;
-        return;
-    }
-    remove(s, i+1, trie[node][s[i]-'a']);
-    if(cnt[trie[node][s[i]-'a']])   trie[node][s[i]-'a'] = 0;
-}
-
-int main(){
-
+void remove(const string& s){
+  int u = 0;
+  for(int i = 0; i < (int)s.size(); i++){
+    c[u]--;
+    u = t[u][s[i]-'a'];
+  }
+  e[u]--;
 }
