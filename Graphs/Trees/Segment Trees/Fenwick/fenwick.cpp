@@ -1,3 +1,5 @@
+// Fenwick tree updata: O(log n), query: O(log n)
+
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;
@@ -27,6 +29,6 @@ struct Fenwick{
   }
 };
 
-int main(){
 
+int main(){
 }

@@ -1,6 +1,3 @@
-#include <bits/stdc++.h>
-using namespace std;
-
 template<class T> struct mono_queue{
     deque<T> d, q;
     void push(T x){

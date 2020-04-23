@@ -2,7 +2,41 @@
 #include <string>
 #include <iostream>
 #include <iomanip>
+#include <algorithm>
 using namespace std;
+
+typedef long long int ll;
+
+string add(string a, string b){
+  reverse(a.begin(), a.end());
+  reverse(b.begin(), b.end());
+  string r;
+
+  int buf = 0;
+  for(int i = 0; i < (int)min(a.size(), b.size()); i++){
+    int sum = a[i] - 48 + b[i] - 48 + buf;
+    buf = 0;
+    if(sum > 9) sum -= 10, buf = 1;
+    r += sum + 48;
+  }
+  for(int i = (int)min(a.size(),b.size()); i < (int)a.size(); i++){
+    int sum = a[i] - 48 + buf;
+    buf = 0;
+    if(sum > 9) sum -= 10, buf = 1;
+    r += sum + 48;
+  }
+  for(int i = (int)min(a.size(),b.size()); i < (int)b.size(); i++){
+    int sum = b[i] - 48 + buf;
+    buf = 0;
+    if(sum > 9) sum -= 10, buf = 1;
+    r += sum + 48;
+  }
+  if(buf) r += buf + 48;
+
+  reverse(r.begin(), r.end());
+
+  return r;
+}
 
 const int B = 10000, D = 4;
 struct BigInt{
@@ -32,13 +66,18 @@ struct BigInt{
         for(int i = r.l-1; i >= 1; i--) o << setfill('0') << setw(D) << r.b[i];
         return o;
     }
+    friend istream&operator>>(istream&o,BigInt&r){
+      string s;
+      cin >> s;
+      r = BigInt(s);
+    } 
     BigInt operator+(const BigInt&r){
         BigInt f(*this);
         f.l = max(l, r.l);
         f.b.resize(f.l+5);
         for(int i = 1; i <= min(f.l, r.l); i++){
             f.b[i] += r.b[i];
-            if(f.b[i] / B)  f.b[i+1] += f.b[i] / B, f.b[i] % B;
+            if(f.b[i] >= B)  f.b[i+1] += f.b[i] / B, f.b[i] %= B;
         }
         while(f.b[f.l+1])   f.l += 1;
         f.b.resize(f.l+1);
@@ -48,6 +87,7 @@ struct BigInt{
     BigInt operator-(const BigInt&r){
         BigInt f(*this);
         f.l = max(l, r.l);
+        f.b.resize(f.l+5);
         for(int i = 1; i <= min(f.l, r.l); i++){
             f.b[i] -= r.b[i];
             while(f.b[i] < 0)   f.b[i] += B, f.b[i+1]--;
@@ -84,8 +124,9 @@ struct BigInt{
 };
 
 int main(){
-    string a, b;
-    cin >> a >> b;
-    BigInt c(a), d(b);
-    cout << c+d << "\n";
+  BigInt a, b;
+  cin >> a >> b;
+  cout << a << " * " << b << " = " << a*b << "\n";
+  cout << a << " + " << b << " = " << a+b << "\n";
+  cout << a << " - " << b << " = " << a-b << "\n";
 }

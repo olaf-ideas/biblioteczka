@@ -7,23 +7,16 @@ int n, m;
 vector<int> adj[N], order;
 bool vis[N];
 
-void bfs(int beg = 0){
-  queue<int> q;
-  vis[beg] = true;
-  q.push(beg);
-  order.push_back(beg);
-
-  while(!q.empty()){
-    int u = q.front();
-    q.pop();
-    for(int v : adj[u]){
-      if(!vis[v]){
-        vis[v] = true;
-        q.push(v);
-        order.push_back(v);
-      }
-    }
-  }
+void bfs(int s = 0){
+   vector<int> q;
+   vis[s] = true;
+   q.push_back(s);
+   for(int i = 0; i < (int)q.size(); i++){
+     for(int v : adj[q[i]]){
+       vis[v] = true;
+       q.push_back(v);
+     }
+   }
 }
 
 int main(){

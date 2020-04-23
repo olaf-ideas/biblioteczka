@@ -24,7 +24,7 @@ using namespace std;
 using namespace __gnu_pbds;
 
 template <class key_type,class map_type=null_type> 
-using hyper_set = tree<key_type,map_type,less<key_type>,rb_tree_tag,tree_order_statistics_node_update>;
+using hyper = tree<key_type,map_type,less<key_type>,rb_tree_tag,tree_order_statistics_node_update>;
 using ll = long long;
 using ld = long double;
 using pi = pair<int,int>;

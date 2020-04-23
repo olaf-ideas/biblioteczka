@@ -9,7 +9,7 @@ struct SegTree{
     vector<T> t;int n;
     SegTree(int n = 0, T def = 0):t(2*n, def),n(n){}
     void upd(int p, T v){
-        for(t[p+=n] = v; p >>= 1)
+        for(t[p+=n] = v; p >>= 1;)
             t[p] = f(t[p<<1],t[p<<1|1]);
     }
     T ask(int l, int r){    // query [l, r)

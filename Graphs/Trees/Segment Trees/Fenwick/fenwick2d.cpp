@@ -1,4 +1,6 @@
-const N = 1005;
+// Fenwick tree update: O(log^2 n), query: O(log^2 n)
+
+const int N = 1005;
 
 int t[N][N];
 

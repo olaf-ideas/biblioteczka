@@ -15,7 +15,7 @@ int lcs(){
 }
 
 int lcs_count(int MOD){ // to do !
-    
+
 }
 
 string lcs_string(){
@@ -30,13 +30,10 @@ string lcs_string(){
   return r;
 }
 
-string lcs_lexicographic(){ //to do !
-
+string lcs_lex(){ //to do !
 }
 
 vector<string> lcs_gen(int x, int y){
-  if(x == 0 || y == 0)    return vector<string>(1);
-
   if(a[x-1] == b[y-1]){
     vector<string> res = lcs_gen(x-1, y-1);
     for(string& s : res)    s += a[x-1];
@@ -50,10 +47,12 @@ vector<string> lcs_gen(int x, int y){
   return t;
 }
 
+
 int main(){
     cin >> a >> b;
     cout << "lcs lenght: " << lcs() << "\n";
     cout << "1 lcs: " << lcs_string() << "\n";
+    cout << "lexicographic lcs: " << lcs_lex() << "\n";
     cout << "all lcses:\n";
 
     vector<string> l = lcs_gen((int)a.size(), (int)b.size());
