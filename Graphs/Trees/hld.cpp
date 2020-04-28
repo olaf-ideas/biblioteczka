@@ -1,47 +1,77 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef long long ll;
-const ll MAXN = 500005, LOG = 35, INF = (1LL<<60LL);
+
+typedef long long int ll;
+
+const int N = 100005;
 
 struct SegTree{
-    SegTree(int _base){
-        while(base < _base+1) base <<= 1;
-        t.resize(base<<1,0),l.resize(base<<1,0);
-    }
+  SegTree(int _base) : base(_base){
+    t.resize(base*2, 0);
+  }
 
-    int base = 1;
-    vector<ll> t,l;
-    unordered_set<int> nodes;
-    int best;
-
-    void lazy(int u){
-        t[u] += l[u];
-        if(u < base)    l[u<<1] += l[u], l[u<<1|1] += l[u];
-        l[u] = 0;
+  void upd(int l, int r, int v, int x = 0, int y = -1, int u = 1){
+    if(y == -1) y = base-1;
+    if(r < x || y < l)  return;
+    if(x <= l && r <= y){
+      t[u] += v;
+      return;
     }
+    int m = (x+y)>>1;
+    upd(l, r, v, x, m, u>>1);
+    upd(l, r, v, m+1, y, u>>1|1);
+  }
 
-    void update(int a, int b, ll val, int low = 0, int high = -1, int u = 1){
-        lazy(u);
-        if(high == -1)  high = base-1;
-        if(a > high || b < low) return;
-        if(a <= low && high <= b){
-            l[u] += val, lazy(u);
-            return;
-        }
-        int mid = (low+high)>>1;
-        update(a,b,val,low,mid,u<<1), update(a,b,val,mid+1,high,u<<1|1);
-    }
+  int ask(int p){
+    p += base;
+    int r = 0;
+    while(p)  r += t[p], p /= 10;
+    return r;
+  }
 
-    ll query(int a, int b, int low = 0, int high = -1, int u = 1){
-        lazy(u);
-        if(high == -1)  high = base-1;
-        if(a > high || b < low)     return -INF;
-        if(a <= low && high <= b)   return t[u];
-        int mid = (low+high)>>1;
-        return max(query(a,b,low,mid,u<<1), query(a,b,mid+1,high,u<<1|1));
-    }
+  int base;
+  vector<int> t;
 };
 
+int n;
+vector<int> adj[N];
+
+struct HLD{
+  vector<SegTree> trees;
+  vector<int> h_adj[N];
+  set<pair<int,int>> h_edges;
+  pair<int,int> id[N];
+  bool vis[N];
+  int size[N], p[N], up[N][LOG], pre[N], post[N], cnt = 0;
+  int light[N];
+
+  bool is_anc(int u, int v){return pre[u] < pre[v] && post[u] > post[v];}
+
+  int lca(int u, int v){
+    if(is_anc(u, v))  return u;
+    if(is_anc(v, u))  return v;
+    for(int i = LOG-1; i >= 0; i--)
+      if(!is_anc(up[u][i], v))  u = up[u][i];
+    return up[u][0];
+  }
+
+  void dfs(int u){
+    pre[u] = cnt++, size[u] = 1, up[u][0] = p[u];
+    for(int i = 1; i < LOG; i++)  up[u][i] = up[up[u][i-1]][i-1];
+    int h = -1, h_size = -1;
+    for(int v : adj[u]) if(v != p[u]){
+      p[v] = u;
+      dfs(v);
+      size[u] += size[v];
+      if(h == -1 || size[v] > h_size) h = v, h_size = size[v];
+    }
+    if(h != -1){
+      h_adj[h].push_back(u), h_adj[u].push_back(h);
+      h_edges.insert(make_pair(u, h)), h_edges.insert(make_pair(h, u));
+    }
+    post[u] = cnt++;
+  }
+};
 int n,q;
 vector<int> adj[MAXN];
 

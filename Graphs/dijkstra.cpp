@@ -9,7 +9,7 @@ int n, m;
 vector<pair<int,ll>> adj[N];
 ll d[N];
 
-vector<int> dijkstra(int s){
+void dijkstra(int s){
   fill(d, d+n, INF);
 
   priority_queue<pair<ll,int>> q;
@@ -21,7 +21,7 @@ vector<int> dijkstra(int s){
     for(const auto&[v, w] : adj[u]){
       if(d[v] > d[u] + w){
         d[v] = d[u] + w;
-        q.push({d[v], v});
+        q.push({-d[v], v});
       }
     }
   }
