@@ -10,13 +10,13 @@ bool vis[MAXN];
 // low[u] = min { pre[v] dla u-v krawedz niedrzewowa
 //              { pre[u]
 //
-// most(u,p[u]) <=> low[u] > pre[p[u]] 
+// most(u,p[u]) <=> low[u] >= pre[p[u]] 
 //
 // punkt-arty(u) <=> (u==root && adj[u].size() > 1) || istnieje syn ze most(v,u) 
 //
 
 void dfs(int u){
-  pre[u] = ++cnt, low[u] = pre[u], vis[u] = true;
+  pre[u] = low[u] = ++cnt, vis[u] = true;
 
   for(int v : adj[u]){
     if(v == p[u])   continue;
