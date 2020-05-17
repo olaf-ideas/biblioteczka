@@ -10,12 +10,12 @@ int sz[MAXN], dep[MAXN], fa[MAXN], dfn[MAXN], top[MAXN], id;
 int ask_seg(int i, int l, int r, int x, int y){return 0;}
 
 void dfs_sz(int u, int p = 0){
-    sz[u] = 1, fa[u] = p;
-    for(int v : adj[u]){
-        if(u == p)  continue;
-        dep[v] = dep[u]+1;
-        dfs_sz(v, u);
-    }
+  sz[u] = 1, fa[u] = p;
+  for(int v : adj[u]){
+      if(u == p)  continue;
+      dep[v] = dep[u]+1;
+      dfs_sz(v, u);
+  }
 }
 
 void dfs_hld(int u, int c, int p = 0){

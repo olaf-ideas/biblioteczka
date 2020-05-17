@@ -1,3 +1,4 @@
+// pryma sort trie, operacje: O(|s|)
 #include <string>
 using namespace std;
 

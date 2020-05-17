@@ -1,3 +1,4 @@
+// uważajnta na pamięć, operacje: O(|s|)
 #include <bits/stdc++.h>
 using namespace std;
 

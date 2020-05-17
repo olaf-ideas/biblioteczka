@@ -1,3 +1,4 @@
+// co cię nie wzmocni, to zabije (nie debugowane)
 #include <bits/stdc++.h>
 using namespace std;
 

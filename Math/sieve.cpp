@@ -7,7 +7,7 @@ void sieve(){
   for(int i = 2; i <= SQRT; i++){
     if(!s[i]){
       primes.push_back(i);
-      for(int j = i*i; j < N; j += i)
+      for(int j = i * i; j < N; j += i)
         s[j] = true;
     }
   }

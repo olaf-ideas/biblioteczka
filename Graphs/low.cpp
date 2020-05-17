@@ -1,10 +1,10 @@
 #include <bits/stdc++.h>
 using namespace std;
-const int MAXN = 1e6+6;
+const int N = 1000005;
 
-vector<int> adj[MAXN];
-int n, m, pre[MAXN], cnt = 1, low[MAXN], p[MAXN];
-bool vis[MAXN];
+vector<int> adj[N];
+int n, m, pre[N], cnt = 1, low[N], p[N];
+bool vis[N];
 
 //              { low[v] dla v != p i u-v krawedz drzewowa
 // low[u] = min { pre[v] dla u-v krawedz niedrzewowa

@@ -1,3 +1,8 @@
+// abaab -> 00112
+#include <bits/stdc++.h>
+using namespace std;
+
+
 vector<int> kmp(const string& s){
   vector<int> p(1);
   for(int i = 1, d = 0; i < (int)s.size(); i++){

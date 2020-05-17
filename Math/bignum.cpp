@@ -145,7 +145,3 @@ struct BigInt{
     return f;
   }
 };
-
-struct BigNum{
-
-};

@@ -1,3 +1,4 @@
+// nie pytają cię o drzwo licznikowe, kiedy walczysz z ostrym cieniem dp'ka (nie debugowane)
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;

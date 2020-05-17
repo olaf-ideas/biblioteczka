@@ -1,4 +1,4 @@
-vector<int> z_func(string &s){
+vector<int> z_func(string & s){
   vector<int> z(s.size());
   for(int i = 1, l = 0, r = 0; i < (int)s.size(); i++){
     if(i <= r)  z[i] = min(r - i + 1, z[i - l]);

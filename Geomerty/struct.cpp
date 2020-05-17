@@ -1,3 +1,4 @@
+// nie wiem po co to zrobilem, ale chyba warto. (to przez Preiss'a) &copy 2020 Olaf Surgut
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -267,3 +268,5 @@ int main(){
   cout << a << "\n" << b << "\n";
   // cout << fixed << setprecision(8) << dist(a,b) << "\n";
 }
+
+// &copy 2020 Olaf Surgut

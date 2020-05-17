@@ -2,7 +2,7 @@
 using namespace std;
 typedef long long ll;
 
-const int BLOCK = 150, MAXN = 500005, MAXQ = 100005;
+const int BLOCK = 250, MAXN = 500005, MAXQ = 100005;
 
 struct Query{
     int l, r, id;
@@ -28,33 +28,33 @@ int n, q, a[MAXN], ans[MAXQ];
 Query queries[MAXQ];
 
 void mo(){
-    int l = 0, r = -1;
+  int l = 0, r = -1;
 
-    sort(queries, queries + q);
-    for(int i = 0; i < q; i++){
-        while(l > queries[i].l) l--, insert(l);
-        while(r < queries[i].r) r++, insert(r);
-        while(l < queries[i].l) remove(l), l++;
-        while(r > queries[i].r) remove(r), r--;
-        ans[queries[i].id] = query();
-    }
+  sort(queries, queries + q);
+  for(int i = 0; i < q; i++){
+    while(l > queries[i].l) l--, insert(l);
+    while(r < queries[i].r) r++, insert(r);
+    while(l < queries[i].l) remove(l), l++;
+    while(r > queries[i].r) remove(r), r--;
+    ans[queries[i].id] = query();
+  }
 }
 
 int main(){
-    scanf("%d", &n);
-    for(int i = 1; i <= n; i++) scanf("%d", a[i]);
-    
-    scanf("%d", &q);
+  cin >> n;
+  for(int i = 1; i <= n; i++) cin >> a[i];
+  
+  cin >> q;
 
-    for(int i = 0; i < q; i++){
-        scanf("%d %d", &queries[i].l, &queries[i].r);
-        queries[i].id = i;
-    }
+  for(int i = 0; i < q; i++){
+    cin >> queries[i].l >> queries[i].r;
+    queries[i].id = i;
+  }
 
-    mo();
+  mo();
 
-    for(int i = 0; i < q; i++)
-        printf("%d\n", ans[i]);
+  for(int i = 0; i < q; i++)
+    cout << ans[i] << '\n';
 
-    assert(BLOCK >= 150);
+  assert(BLOCK >= 150);
 }

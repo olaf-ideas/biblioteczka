@@ -1,3 +1,4 @@
+// przyda sie na nastepnego OI i 5 kolejnych
 #include <bits/stdc++.h>
 using namespace std;
 

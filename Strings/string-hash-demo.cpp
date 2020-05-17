@@ -1,3 +1,4 @@
+// po 23 zaczyna sie sniadanie (nie debugowane)
 #include <bits/stdc++.h>
 #define sz(x) (int)(x.size())
 using namespace std;

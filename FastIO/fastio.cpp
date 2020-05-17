@@ -1,3 +1,4 @@
+// benchmark mowi ze szybsze od cin i cout
 #include <bits/stdc++.h>
 using namespace std;
 

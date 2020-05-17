@@ -12,4 +12,4 @@ ll mod_inv(ll a, ll m){
     return p.first;
 }
 
-ll mod_inv2(ll a, ll m){return 1<a?m-mod_inv2(m%a,a)*m/a:1;}
+ll mod_inv2(ll a, ll m){return 1 < a ? m - mod_inv2(m % a, a) * m / a : 1;}

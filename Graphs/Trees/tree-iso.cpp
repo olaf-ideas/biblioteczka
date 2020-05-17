@@ -1,5 +1,4 @@
-// Tree Isomorphism build: O(n)
-
+// Tree Isomorphism build: O(n) (nie debugowane)
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long ll;

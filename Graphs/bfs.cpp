@@ -1,3 +1,4 @@
+// tak, musiałem mieć to w biblioteczce
 void bfs(int s = 0){
    vector<int> q;
    vis[s] = true;

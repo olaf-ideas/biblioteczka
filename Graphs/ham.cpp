@@ -28,6 +28,8 @@ bool ham(int u, int s, int cnt = 1){
 	return false;
 }
 
+// impementation of 2^n n^2
+
 int main(){	// be ware of n = 1, remember to clear vis
 	cin >> n >> m;
 	for(int i = 0; i < m; i++){
