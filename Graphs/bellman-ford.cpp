@@ -3,7 +3,7 @@ using namespace std;
 typedef long long ll;
 
 const int MAXN = 100005;
-const ll INF = (1LL<<60LL);
+const ll INF = 1LL<<60LL;
 
 struct Edge{int u, v; ll w;};
 

@@ -1,4 +1,4 @@
-// 2h myslone, 2h pisane. Działa
+// 2h myslone, 2h pisane. Dziala
 #include <bits/stdc++.h>
 using namespace std;
 using ld = long double;

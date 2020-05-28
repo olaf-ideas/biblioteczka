@@ -31,6 +31,7 @@ string lcs_string(){
 }
 
 string lcs_lex(){ //to do !
+
 }
 
 vector<string> lcs_gen(int x, int y){

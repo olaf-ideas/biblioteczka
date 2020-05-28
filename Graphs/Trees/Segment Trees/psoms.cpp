@@ -1,57 +1,49 @@
-// https://solve.edu.pl/tasks/view/164
 #include <bits/stdc++.h>
+#define st first
+#define nd second
+#define ll long long
+#define node pair<pair<ll,ll>,pair<ll,ll>>
 using namespace std;
-typedef long long ll;
-typedef long double ld;
-const ll MAXN = (1LL<<20LL), INF = 1e18L;
 
-struct Node{
-  ll l,r,b,s;
-  Node(ll x) : l(max(0LL, x)),r(max(0LL, x)),b(max(0LL, x)),s(x){}
-  Node() : l(0),r(0),b(0),s(0){}
-  static Node merge(Node &a, Node &b){
-    Node r;
-    r.l = max(a.l, a.s + b.l);
-    r.r = max(b.r, b.s + a.r);
-    r.s = a.s + b.s;
-    r.b = max({a.b, b.b, a.s + b.l, b.s + a.r});
-    return r;
+const int T = 1 << 20;
+
+node t[T << 1];
+int n, q;
+
+node merge(const node & l, const node & r){
+  return {{l.st.st + r.st.st, max({l.st.nd, r.st.nd, l.st.st + r.st.st, l.nd.nd + r.nd.st})},
+          {max(l.nd.st,l.st.st + r.nd.st), max(r.nd.nd, r.st.st + l.nd.nd)}};
+}
+
+void upd(int x, int v){
+  t[x += T] = {{v,max(0,v)},{max(0,v),max(0,v)}};
+  while(x >>= 1)  t[x] = merge(t[x << 1], t[x << 1 | 1]);
+}
+
+ll ask(int l, int r){
+  if(l == r)  return t[l += T].st.nd;
+  node lt(t[l += T]), rt(t[r += T]);
+  for(; l + 1 < r; l >>= 1, r >>= 1){
+    if(!(l & 1))  lt = merge(lt, t[l + 1]);
+    if(r & 1)     rt = merge(t[r - 1], rt);
   }
-};   
-
-struct SegTree{
-  Node t[2*MAXN+5];
-
-  void update(int x, ll val){
-    for(t[x+MAXN] = Node(val); x > 1; x >>= 1) t[x>>1] = Node::merge(t[x], t[x^1]);
-  }
-
-  Node query(int l, int r){   // [l, r) !!!
-    Node rl, rr;
-    for(l += MAXN, r += MAXN; l < r; l >>= 1, r >>= 1){
-      if(l&1) rl = Node::merge(rl, t[l++]);
-      if(r&1) rr = Node::merge(t[--r],rr);
-    }
-    return Node::merge(rl,rr);
-  }
-};
-
-SegTree tree;
-int n,q;
+  return merge(lt, rt).st.nd;
+}
 
 int main(){
+  ios::sync_with_stdio(0), cin.tie(0), cout.tie(0);
   cin >> n;
   for(int i = 1; i <= n; i++){
-    ll x;
-    cin >> x;
-    tree.update(i,x);
-  }
+    int a; cin >> a;
+    upd(i, a);
+  }  
+
   cin >> q;
   while(q--){
-    char type;
+    char c;
     int a, b;
-    cin >> type >> a >> b;
-    if(type == 'Q') cout << tree.query(a,b+1).b << '\n';
-    else            tree.update(a,b);
+    cin >> c >> a >> b;
+    if(c == 'Q')  cout << ask(a, b) << '\n';
+    if(c == 'C')  upd(a, b);    
   }
 }
