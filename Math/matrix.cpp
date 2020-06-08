@@ -2,8 +2,8 @@ template<class T>
 class Matrix{
 public:
 
-	Matrix(){}
-  Matrix(size_t n, size_t m, T def = 0):mx(n,std::vector<T>(m,def)){}
+	Matrix() {}
+  Matrix(size_t n, size_t m, T def = 0) : mx(n,std::vector<T>(m,def)) {}
   Matrix(std::vector<std::vector<T>> _mx):mx(_mx){}
 
   friend Matrix operator * (const Matrix& a, const Matrix& b){
@@ -45,7 +45,7 @@ public:
 
   Matrix operator += (int x){
     *this = *this + x;
-    return *this;
+    return *this
   }
 
   friend Matrix operator - (Matrix a, int b){
