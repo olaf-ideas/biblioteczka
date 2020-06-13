@@ -5,11 +5,13 @@
 * [x] Heavy-Light Decomposition
 * [ ] Centroid Decomposition
 * [x] Segment Trees
-* [ ] Sparse Table
+* [x] Fenwick Tree
+* [x] Sparse Table
 * [x] Union Find
-* [ ] Treap
+* [x] Treap
 * [ ] SQRT Decomposition
-* [ ] Policy Based Data Structures
+* [x] Policy Based Data Structures
+* [x] Heap
 
 ### Graph
 * [x] BFS
@@ -23,6 +25,7 @@
 * [x] Hungarian Algorithm
 * [x] LOW function
 * [ ] Turbo Matching
+* [ ] Edmonds
 * [ ] Vertex Cover
 * [x] Strongly Connected Components
 * [x] Topological Sort
@@ -44,7 +47,7 @@
 * [x] Primes
 * [ ] Sprague–Grundy theorem
 * [ ] BinSearch & TernarySearch
-* [ ] Fraction struct
+* [x] Fraction struct
 
 ### String
 * [x] Trie
@@ -55,13 +58,13 @@
 * [x] Sufix Array & LCP
 * [x] Hashes
 * [ ] KMR
-* [ ] Longest Common Subsequence
+* [x] Longest Common Subsequence
 * [ ] Palindromic Tree
 
 ### Geometry
 * [x] Point struct
 * [x] Convex Hull
-* [x] Clostest Points
+* [ ] Closest Points
 
 ### Other
 * [x] Template
