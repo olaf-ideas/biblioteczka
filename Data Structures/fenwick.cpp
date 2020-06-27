@@ -1,21 +1,19 @@
-template <class T>
-struct Fenwick {
-  vector<T> s;
-  Fenwick(int n) : s(n) {}
-  void upd(int p, T v){
-    for(; p < (int)s.size(); p |= p + 1)  s[p] += v;
-  }
-  T ask(int p){ // [0, p)
-    T r = 0;
-    for(; p; p &= p - 1)  r += s[p - 1];
-    return r;
-  }
-  int lower_bound(T x){
-    if(x <= 0)  return -1;
-    int p = 0;
-    for(int i = 1 << 25; i; i >>= 1)
-      if(p + i <= (int)s.size() && s[p + i - 1] < x)
-        p += i, x -= s[p - 1];
-    return p;
-  }
+template <class T, int ...Ns> struct BIT {
+  T val = 0;
+  void upd(T v) { val += v; }
+  T query() { return val; }
 };
+ 
+template <class T, int N, int... Ns> struct BIT<T, N, Ns...> {
+  BIT<T,Ns...> bit[N + 1];
+  template<typename... Args> void upd(int pos, Args... args){
+    for(; pos <= N; pos += pos & -pos) bit[pos].upd(args...);
+  }
+  template<typename... Args> T sum(int r, Args... args) {
+    T res = 0; for(; r; r -= r & - r) res += bit[r].query(args...); 
+    return res;
+  }
+  template<typename... Args> T query(int l, int r, Args... args){
+    return sum(r,args...) - sum(l - 1,args...);
+  }
+}; // BIT<int, 1000, 1000> for 2D
