@@ -1,15 +1,12 @@
-// Aho Corasic algorithm  O(|s| + |t|)
+// Aho Corasic algorytym  O(|s| + |t|)
 
-#include <iostream>
-#include <vector>
-#include <queue>
-#include <utility>
+#include <bits/stdc++.h>
 using namespace std;
 
 const int S = 100005, ALF = 27;
 
 int go[S][ALF], fail[S*ALF], cnt = 1;
-vector<int> leaf[S*ALF];
+int leaf[S];
 
 void add_string(const string& s, int id){
   int u = 0;
@@ -17,8 +14,8 @@ void add_string(const string& s, int id){
     int c = ch - 'a';
     if(!go[u][c]) go[u][c] = cnt++;
     u = go[u][c];
-  } 
-  leaf[u].push_back(id);
+  }
+  leaf[u] = id;
 }
 
 void build(){

@@ -19,8 +19,8 @@ int finduf(int u){
   return u == uf[u] ? u : uf[u] = finduf(uf[u]);
 }
 
-void unionuf(int u, int v){
-  uf[finduf(u)] = finduf(v);
+bool unionuf(int u, int v){
+  return u != v ? uf[u] = v, true : false;
 }
 
 int kruskal(){
@@ -32,8 +32,7 @@ int kruskal(){
   for(const pair<int, pair<int, int>> & e : edges){
     int w = e.first;
     int u = e.second.first, v = e.second.second;
-    if(finduf(u) != finduf(v)){
-      unionuf(u, v);
+    if(unionuf(finduf(u), finduf(v))){
       mst[u].push_back({w, v});
       mst[v].push_back({w, u});
       res += w;

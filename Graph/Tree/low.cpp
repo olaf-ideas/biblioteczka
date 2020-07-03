@@ -13,7 +13,7 @@ bool vis[N];
 //
 // most(u,p[u]) <=> low[u] > pre[p[u]] 
 //
-// punkt-arty(p[u]) <=> (u == root && krawedzie drzewowe > 1) || (most(u, p[u]) && nie lisc() 
+// punkt-arty(u) <=> (u == root && krawedzie drzewowe > 1) || (most(u, p[u]) && nie lisc() 
 //
 
 void dfs(int u){
