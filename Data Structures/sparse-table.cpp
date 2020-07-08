@@ -3,6 +3,7 @@ struct SparseTable {
   const vector<T> &x;
   vector<vector<int>> table;
   int argmin(int i, int j){return x[i] < x[j] ? i : j;}
+  
   SparseTable(const vector<T> &_x) : x(_x) {
     int logn = sizeof(int) * __CHAR_BIT__ - 1 - __builtin_clz(x.size());
     table.assign(logn + 1, vector<int>(x.size()));

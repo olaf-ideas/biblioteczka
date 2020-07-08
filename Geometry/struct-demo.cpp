@@ -127,6 +127,28 @@ inline P obrot(const P &s, const P &p, T k){ // obrot o k stopni
 //       \
 //        Q  wynik: Q
 
+inline T kat(const P &a, const P &b){
+  return atan2(det(a, b), a * b);
+}
+
+inline bool on_segment(const P &p, const S &s){
+  return min(s.a.x, s.b.x) <= p.x && p.x <= max(s.a.x, s.b.x) &&
+         min(s.a.y, s.b.y) <= p.y && p.y <= max(s.a.y, s.b.y);
+}
+
+inline bool intersect(const S &s1, const S &s2) { // czy dwa odcinki sie przecinaja
+  if(s1.a == s2.a || s1.a == s2.b || s1.b == s2.a || s1.b == s2.b) return true;
+  long long d1 = det(s2.b-s2.a, s1.a-s2.a), d2 = det(s2.b-s2.a, s1.b-s2.a),
+            d3 = det(s1.b-s1.a, s2.a-s1.a), d4 = det(s1.b-s1.a, s2.b-s1.a);
+  return (d1 > 0 && d2 < 0 || d1 < 0 && d2 > 0) &&
+         (d3 > 0 && d4 < 0 || d3 < 0 && d4 > 0) ||
+          isZero(d1) && on_segment(s1.a, s2) ||
+          isZero(d2) && on_segment(s1.b, s2) ||
+          isZero(d3) && on_segment(s2.a, s1) ||
+          isZero(d4) && on_segment(s2.b, s1);
+}
+
+inline P intersect_
 
 int main(){
 

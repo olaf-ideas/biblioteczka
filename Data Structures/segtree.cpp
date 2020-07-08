@@ -17,12 +17,10 @@ void upd(int l, int r, int v, int x=0, int y=T-1, int u=1){
   if(l <= x && y <= r){
     p[u] += v, lazy(u);
     return;
-  }
-  
+  }  
   int m = (x + y) >> 1;
   upd(l, r, v, x, m, u << 1);
   upd(l, r, v, m + 1, y, u << 1 | 1);
-  
   t[u] = max(t[u << 1], t[u << 1 | 1]);
 }
 

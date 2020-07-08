@@ -20,15 +20,15 @@ void dfs(int u, int p=0){
 }
 
 bool is_anc(int u, int v){
-  return pre[u] < pre[v] && post[u] > post[v];
+  return pre[u] <= pre[v] && post[u] >= post[v];
 }
 
-int lcs(int u, int v){
+int lca(int u, int v){
   if(is_anc(u, v))  return u;
   if(is_anc(v, u))  return v;
 
   for(int i = LOG - 1; i >= 0; i--)
-    if(!is_anc(up[u][0], v))  u = up[u][i];
+    if(!is_anc(up[u][i], v))  u = up[u][i];
   return up[u][0];
 }
 
