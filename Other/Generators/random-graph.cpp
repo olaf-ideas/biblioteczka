@@ -1,31 +1,41 @@
-// trza lepszy zrobic
 #include <bits/stdc++.h>
+
 using namespace std;
-using ll = long long;
 
-const int N = 200005, M = 200005, C = 1000000005;
+typedef long long int LL;
 
-int rand(int a, int b){return a+rand()%(b-a+1);}
+const int N = 5e3;
+const int M = 1e5;
 
-int main(int argc, char *argv[]){
-  (argc > 1 ? srand(atoi(argv[1])) : srand(int(time(NULL))));
-  ios_base::sync_with_stdio(0), cin.tie(NULL), cout.tie(NULL);
-  
-  set<pair<int,int>> edges;
-  int n = rand(1,N), m = rand(1,min(int(n*1LL*(n+1)/2),M));
-  
-  for(int i = 0; i < m; i++){
-    int u = rand(1, n-1), v = rand(u+1, n);
+inline int r(int l, int r) { return l + rand() % (r - l + 1); }
 
-    while(edges.count(make_pair(u,v)) || 
-          edges.count(make_pair(v,u)))
-      u = rand(1, n-1), v = rand(u+1, n);
-    
-    if(rand()%2)  edges.insert({u,v});
-    else          edges.insert({v,u});
+int main(int argc, char** argv) {
+  srand(atoi(argv[1]));
+
+  int n = r(1, N);
+  int m = r(1, min(M / n, n) * n);
+
+  printf("%d\n", n);
+  for(int i = 0; i < n; i++) cout << r(0, 1e9) << '\n';
+  printf("%d\n", m);
+
+  vector<pair<int, int>> edges;
+  unordered_set<LL> s;
+
+  for(int i = 0; i < m; i++) {
+    int u = r(1, n - 1);
+    int v = r(u + 1, n);
+
+    while(s.count(u * 1LL * (n + 1) + v)) u = r(1, n - 1), v = r(u + 1, n);
+    s.insert(u * 1LL * (n + 1) + v);
+
+    if(rand() & 1)  swap(u, v);
+    edges.push_back({u, v});
   }
 
-  cout << n << " " << m << "\n";
-  for(auto&[u, v] : edges)
-    cout << u << " " << v << " " << rand(1, C) << "\n";
+  random_shuffle(edges.begin(), edges.end());
+  
+  for(const pair<int, int>& e : edges) {
+    printf("%d %d %d\n", e.first, e.second, r(0, 10000));
+  }
 }

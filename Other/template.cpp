@@ -7,28 +7,23 @@
 //                |_____|             |___/           
 //
 #include <bits/stdc++.h>
-using namespace std;
-#define st  first
-#define nd  second
-#define ll  long long
-#define mp  make_pair
-#define pb  push_back
-#define INF 1000000005LL
-#define MOD 1000000007
-#define FOR(i, n) for(int i = 0; i < int(n); i++)
-#define FORN(i, n) for(int i = 1; i <= int(n); i++)
-#define REP(i, n, x) for(int i = int(x); i < int(n); i++)
-#define REPN(i, n, x) for(int i = int(x); i <= int(n); i++)
-#define TRAV(i, n) for(auto i : n)
 
-void solve(){
+using namespace std;
+
+typedef long long int LL;
+typedef long double LD;
+
+const int INF = 1e9 + 7;
+const LL LONG_INF = 1e18 + 7;
+const LD EPS = 1e-9;
+
+template <class T> inline T rd() {
+    T r=0; int c = getchar();
+    while(c < '0' || c > '9')   c = getchar();
+    for(; '0' <= c && c <= '9'; c = getchar())
+        r = (r << 3) + (r << 1) + c - 48;
+    return r;
 }
 
-int main(){
-#ifndef LOCAL
-  ios::sync_with_stdio(0), cin.tie(NULL), cout.tie(NULL);
-#endif
-  // int _; cin >> _; while(_--)  solve();
-  solve();
-  return 0;
+int main() {
 }

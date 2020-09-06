@@ -1,25 +1,28 @@
 #include <bits/stdc++.h>
+
 using namespace std;
-const int MINN = 100005, MAXN = 1000005; 
 
-int rand(int a, int b){return a+rand()%(b-a+1);}
+const int N = 1e5;
 
-int main(int argc, char *argv[]){
-  (argc > 1 ? srand(atoi(argv[1])) : srand(int(time(NULL))));
-  ios_base::sync_with_stdio(0), cin.tie(NULL), cout.tie(NULL);
+inline int r(int a, int b) { return a + rand() % (b -a + 1 ); }
 
-  int n = rand(MINN,MAXN);
-  vector<pair<int,int>> edges;
-  vector<int> perm(n+1);
+int main(int argc, char* argv[]) {
+  srand(atoi(argv[1]));
 
-  for(int i = 2; i <= n; i++) edges.emplace_back(rand(1,i-1),i);
-  for(int i = 1; i <= n; i++) perm[i] = i;
+  int n = r(1, N);
+  vector<pair<int,int>> e(n - 1);
+  vector<int> p(n);
+
+  for(int i = 1; i < n; i++)  e[i - 1] = {r(0, i - 1), i};
+  for(int i = 1; i < n; i++)  p[i] = i + 1;
+
+  random_shuffle(p.begin(), p.end());
+  random_shuffle(e.begin(), e.end());
   
-  random_shuffle(perm.begin()+1, perm.end());
-  random_shuffle(edges.begin(), edges.end());
-  
-  cout << n << "\n";
-  for(auto&[u, v] : edges)
-    if(rand()&1)  cout << perm[u] << " " << perm[v] << "\n";
-    else          cout << perm[v] << " " << perm[u] << "\n";
+  printf("%d\n", n);
+  for(const pair<int, int>& a : e) {
+    int u = a.first, v = a.second;
+    if(rand() & 1)  swap(u, v);
+    printf("%d %d\n", p[u], p[v]);
+  }
 }

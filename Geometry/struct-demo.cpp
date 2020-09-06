@@ -28,7 +28,7 @@ struct S { // odcinek
 };
 
 inline T skal(const P &a, const P &b, const P &c){  // kat miedzy wektorami
-  return (b.x - a.x) * (c.x - a.x) * (b.y - a.y) * (c.y - a.y);
+  return (b.x - a.x) * (c.x - a.x) + (b.y - a.y) * (c.y - a.y);
 }
 //      C
 //     /

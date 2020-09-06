@@ -4,6 +4,24 @@ using namespace std;
 
 typedef long long int ll;
 
+/* only for positive integers
+template <class T> inline T rd() {
+    T r=0; int c = getchar();
+    while(c < '0' || c > '9')   c = getchar();
+    for(; '0' <= c && c <= '9'; c = getchar())
+        r = (r << 3) + (r << 1) + c - 48;
+    return r;
+}*/
+
+template <class T> inline T rd() {
+    T r=0; int c = getchar(), s=1;   
+    while(!('0' <= c && c <= '9') && c != '-')  c = getchar();
+    if(c == '-')    s = -s, c = getchar();
+    for(; '0' <= c && c <= '9'; c = getchar())
+        r = (r << 3) + (r << 1) + c - 48;
+    return r * s;
+}
+
 struct FastIO{
   FastIO& operator << (int x){
     if(x == 0){
@@ -61,9 +79,6 @@ struct FastIO{
   }
 }io;
 
-int main(){
-  string a;
-  int b;
-  io >> a >> b;
-  io << a << " " << b << "\n";
+int main() {
+
 }

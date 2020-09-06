@@ -1,20 +1,29 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-bool isLeft(const pair<int, int>& a,
-            const pair<int, int>& b,
-            const pair<int, int>& c){
-  return (b.first - a.first) * 1LL * (c.second - a.second) - 
-         (b.second - a.second) * 1LL * (c.first - a.first) <= 0LL;   // < points on edges
+typedef long long int LL;
+
+struct P {
+  int x, y;
+  P() { }
+  P(int _x, int _y) : x(_x), y(_y) { }
+  bool operator < (const P& p) const { return x != p.x ? x < p.x : y < p.y; }
+  bool operator == (const P& p) const { return x == p.x && y == p.y; }
+
+  
+};
+
+LL det(const P& a, const P& b, const P& c) {
+  return (b.x - a.x) * 1LL * (c.y - a.y) - (b.y - a.y) * 1LL * (c.x - a.x);
 }
 
-vector<pair<int,int>> convexHull(vector<pair<int, int>> p){
+vector<P> convexHull(vector<P> p) {
   sort(p.begin(), p.end());
-  vector<pair<int, int>> h;
-  for(int i = 0; i < 2; i++){
+  vector<P> h;
+  for(int i = 0; i < 2; i++) {
     auto start = h.size();
-    for(const pair<int, int> &q : p){
-      while(h.size() >= start+2 && isLeft(h[h.size()-2], h[h.size()-1], q))
+    for(const P& q : p) {
+      while(h.size() >= start + 2 && det(h[h.size() - 2], h.back(), q) < 0) // < points on edges
         h.pop_back();
       h.push_back(q);
     }
@@ -24,17 +33,18 @@ vector<pair<int,int>> convexHull(vector<pair<int, int>> p){
   return h;
 }
 
-int main(){
-  int n;
-  cin >> n;
-  vector<pair<int, int>> p;
-  for(int i = 0; i < n; i++){
-    int x, y; cin >> x >> y;
-    p.emplace_back(x, y);
-  }
-  vector<pair<int, int>> h = convexHull(p);
+int main() {
+  ios::sync_with_stdio(0), cin.tie(0), cout.tie(0);
 
-  cout << "convex hull:\n";
-  for(const pair<int, int> q : h)
-    cout << q.first << ' ' << q.second << '\n';
+  int n; cin >> n;
+  vector<P> p;
+  for(int i = 0; i < n; i++) {
+    int x, y; cin >> x >> y;
+    p.push_back(P(x, y));
+  }
+
+  vector<P> h = convexHull(p);
+  for(const P& q : h) {
+    cout << q.x << ' ' << q.y << '\n';
+  }
 }

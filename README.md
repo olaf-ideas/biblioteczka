@@ -8,7 +8,7 @@
 * [x] Fenwick Tree
 * [x] Sparse Table
 * [x] Union Find
-* [x] Treap
+* [ ] Treap
 * [x] SQRT Decomposition (MO)
 * [x] Policy Based Data Structures
 * [x] Heap
@@ -42,7 +42,7 @@
 * [ ] Gauss Elimination
 * [ ] FFT
 * [ ] Karatsuba
-* [ ] BigNum struct
+* [x] BigNum struct
 * [x] Primes
 * [ ] Sprague–Grundy theorem
 * [x] Fraction struct
