@@ -34,11 +34,21 @@ struct SAT {
         }
     }
 
-    // Note: even index -> negation, odd index -> normal
-    void ae2(int u, bool nu, int v, bool nv) {
+    // Note: even index -> negation, odd index -> normal, nu = true -> u is false
+    void ae2(int u, bool nu, int v, bool nv) { // u is nu or v is nv
         assert(0 <= u && u < n && 0 <= v && v < n);
         adj[2 * u + nu].push_back(2 * v + 1 - nv);
         adj[2 * v + nv].push_back(2 * u + 1 - nu);
+    }
+
+    void always_true(int u) {
+        assert(0 <= u && u < n);
+        ae(u, false, u, false);
+    }
+
+    void always_false(int u) {
+        assert(0 <= u && u < n);
+        ae(u, true, u, true);
     }
 
     bool solve(vector<bool> &ans) {
