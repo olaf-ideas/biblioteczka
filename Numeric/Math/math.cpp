@@ -25,13 +25,20 @@ namespace math {
     T sub(T a, T b, T mod) { a -= b; return a < 0 ? a + mod : a; }
     template <typename T> // tested
     T mul(T a, T b, T mod) {
-        // return (__int128(a) * b) % mod;
-        if(mod < INT_MAX)   return (long long) a * b % mod;
+        if(a >= mod)  a %= mod;
+        if(b >= mod)  b %= mod;
+#ifndef LOCAL // overflows
+        long long c = (long double)(a) * b / mod;
+        long long r = a * b - c * mod;
+        return r < 0 ? r % mod + mod : r % mod;
+#else
         T res = 0;
-        for(a %= mod, b %= mod; b; b >>= 1, a = (a + a) % mod)
-            if(b & 1)   res = (res + a) % mod;
+        for(; b; a = add(a, a, mod), b >>= 1)
+            if(b & 1)   res = add(a, res, mod);
         return res;
+#endif
     }
+
     template <typename T> // tested
     T div(T a, T b, T mod) { return mul(a, inv(b, mod), mod); }
     template <typename T> // tested
@@ -150,7 +157,19 @@ namespace math {
     }
 } // math
 
+const long long ten = 1e18L;
+
+long long r() {
+    return (rand() | ((long long) rand() << 32LL)) % ten;
+}
+
 int main() {
-    long long a, b, m; cin >> a >> b >> m;
-    cout << math::sub(a % m, b % m, m) << '\n';
+    for(int rep = 0; rep < 100000; rep++) {
+        long long n = r();
+        vector<long long> f = math::factor(n);
+        cout << n << ": ";
+        for(auto x : f) cout << x << ' ';
+        if(f.size() == 1)   cout << "PRIME";
+        cout << '\n';
+    }
 }

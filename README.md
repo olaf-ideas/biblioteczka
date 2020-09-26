@@ -31,7 +31,7 @@
 * [x] Minimum Spanning Tree
 * [x] Lowest Common Ancestor
 * [ ] Tree Isomorphism
-* [ ] 2 SAT
+* [X] 2 SAT
 * [ ] Flows
 
 ### Numeric

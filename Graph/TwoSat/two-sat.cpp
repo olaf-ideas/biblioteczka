@@ -1,5 +1,5 @@
 /*
- * Desciption: Tarjan algorithm for 2-SAT problem
+ * Desciption: 2-SAT problem solver
  * Author: olaf_surgut
  * Complexity: O(N + M)
  * Verification: https://cses.fi/problemset/task/1684 https://szkopul.edu.pl/problemset/problem/PaOm0b0Z7CvBDSQxwd1ItSP8/site/?key=statement
@@ -8,57 +8,38 @@
 struct SAT {
     int n;
     vector<vector<int>> adj;
-    stack<int> s;
-    vector<int> pre, low, scc, vis;
-    int tim = 1, cnt = 0;
-    
-    SAT(int _n) : n(_n), adj(n << 1), pre(n << 1), 
-            low(n << 1), scc(n << 1), vis(n << 1) { }
+    vector<int> ans;
 
-    void dfs(int u) {
-        low[u] = pre[u] = tim++;
-        vis[u] = true;
-        s.push(u);
-        for(int v : adj[u]) {
-            if(!pre[v]) dfs(v);
-            if(vis[v])  low[u] = min(low[u], low[v]);
-        }
+    SAT(int _n) : n(_n), adj(2 * n) { }
 
-        if(low[u] == pre[u]) {
-            int v = -1;
-            while(v != u) {
-                v = s.top(); s.pop();
-                vis[v] = false, scc[v] = cnt;
-            }
-            cnt++;
-        }
+    void either(int a, int b) { // zoga_mother.either(zoga, ~myszojelen);
+        a = max(2 * a, -1 - 2 * a);
+        b = max(2 * b, -1 - 2 * b);
+        assert(0 <= a && a < 2 * n && 0 <= b && b < 2 * n);
+        adj[a].push_back(b ^ 1);
+        adj[b].push_back(a ^ 1);
     }
 
-    // Note: even index -> negation, odd index -> normal, nu = true -> u is false
-    void ae2(int u, bool nu, int v, bool nv) { // u is nu or v is nv
-        assert(0 <= u && u < n && 0 <= v && v < n);
-        adj[2 * u + nu].push_back(2 * v + 1 - nv);
-        adj[2 * v + nv].push_back(2 * u + 1 - nu);
+    void set_value(int x) { either(x, x); }
+
+    vector<int> val, comp, z; int time = 0;
+    int dfs(int u) {
+        int low = val[u] = ++time, x; z.push_back(u);
+        for(int v : adj[u]) if(!comp[v])
+            low = min(low, val[v] ?: dfs(v));
+        if(low == val[u]) do {
+            x = z.back(); z.pop_back();
+            comp[x] = low;
+            if(ans[x >> 1] == -1) ans[x >> 1] = x & 1;
+        } while(x != u);
+        return val[u] = low;
     }
 
-    void always_true(int u) {
-        assert(0 <= u && u < n);
-        ae(u, false, u, false);
-    }
-
-    void always_false(int u) {
-        assert(0 <= u && u < n);
-        ae(u, true, u, true);
-    }
-
-    bool solve(vector<bool> &ans) {
-        for(int i = 0; i < 2 * n; i++) if(!pre[i]) dfs(i);
-        for(int i = 0; i < n; i++) if(scc[2 * i] == scc[2 * i + 1]) return false;
-        vector<int> v(cnt), c(cnt, -1);
-        for(int i = 0; i < 2 * n; i++)  v[scc[i]] = i;
-        for(int i = 0; i < cnt; i++) if(c[i] == -1) c[i] = true, c[scc[v[i] ^ 1]] = false;
-        ans.resize(n, false);
-        for(int i = 0; i < n; i++) ans[i] = c[scc[2 * i + 1]];
+    bool solve() {
+        ans.assign(n, -1);
+        val.assign(2 * n, 0); comp = val;
+        for(int i = 0; i < 2 * n; i++) if(!comp[i]) dfs(i);
+        for(int i = 0; i < n; i++)  if(comp[2 * i] == comp[2 * i + 1])  return false;
         return true;
     }
 };

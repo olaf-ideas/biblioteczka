@@ -1,1 +1,0 @@
-CTRL-N -> list of suggestions while in insert mode
