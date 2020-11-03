@@ -20,7 +20,6 @@ int low[N], tim = 1;
 int scc[N], cnt = 0;
 bool vis[N];
 
-// Note: Finding SCC are in topological order
 void dfs(int u) {
     pre[u] = low[u] = tim++;
     vis[u] = true;
