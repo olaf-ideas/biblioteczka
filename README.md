@@ -8,7 +8,7 @@
 * [x] Fenwick Tree
 * [x] Sparse Table
 * [x] Union Find
-* [ ] Treap
+* [x] Treap
 * [x] SQRT Decomposition (MO)
 * [x] Policy Based Data Structures
 * [x] Heap
