@@ -1,44 +1,46 @@
-// najwiekszy polski hasher
-//
+// NAJWIEKSZY POLSKI HASHER
+// autor: olaf_surgut
 // zadanka: 
 // Graffiti: https://solve.edu.pl/~sparingi/tasks/view/209
 
 #include <bits/stdc++.h>
-using namespace std;
-using ll = long long;
 
-template<int MOD, int BASE>
+using namespace std;
+
+template <int mod, int base>
 struct MyHash {
-  int n;
-  vector<int> p, h;
-  string s;
-  MyHash(const string& _s) : n((int)_s.size()), p(_s.size(),1), h(_s.size(),_s[0]-'a'+1), s(_s) {
-    for(int i = 1; i < n; i++)  p[i] = int((p[i - 1] * 1LL * BASE) % MOD);
-    for(int i = 1; i < n; i++)  h[i] = int((h[i - 1] * 1LL * BASE + s[i] - 'a' + 1) % MOD);
-  }
-  int operator () () { return h.back(); }
-  int operator () (int l, int r) {
-    if(l == 0)  return h[r];
-    return int(((h[r] - h[l - 1] * 1LL * p[r - l + 1]) % MOD + MOD) % MOD);
-  }
-  bool operator < (const MyHash& other) {
-    if(s[0] != other.s[0])  return s[0] < other.s[0];
-    int l = 0, r = min(n, other.n); 
-    if(h[r - 1] == other.h[r - 1])  return n < other.n;
-    while(r - l > 1){
-      int m = (l + r) >> 1;
-      (h[m] == other.h[m] ? l = m : r = m);
+    inline int add(int a, int b) const { a += b; return a < mod ? a : a - mod; }
+    inline int sub(int a, int b) const { a -= b; return a < 0 ? a + mod : a; }
+    inline int mul(int a, int b) const { return int((long long) a * b % mod); }
+    inline int to_int(char c)    const { return int(c - 'a' + 1); }
+
+    int n;
+    vector<int> p, h;
+    MyHash(const string &s) : n((int) s.size()), p(n, 1), h(n, n ? to_int(s[0]) : 0) {
+        for(int i = 1; i < n; i++)  p[i] = mul(p[i - 1], base);
+        for(int i = 1; i < n; i++)  h[i] = add(mul(h[i - 1], base), to_int(s[i]));
     }
-    return s[l + 1] < other.s[l + 1];
-  }
+    int operator () () const { return h[n - 1]; }
+    int operator () (int l, int r) const {
+        if(l == 0)  return h[r];
+        return sub(h[r], mul(h[l - 1], p[r - l + 1]));
+    }
 };
+
+template <int mod, int base>
+int diff_pos(const MyHash<mod, base> &a, const MyHash<mod, base> &b) {
+    int l = -1, r = min(a.n, b.n);
+    while(r - l > 1) {
+        int m = (l + r) >> 1;
+        (a(0, m) == b(0, m) ? l : r) = m; 
+    }
+    return r;
+}
 
 typedef MyHash<1000000007, 31> Hash7;
 typedef MyHash<1000000009, 31> Hash9;
-
-int main() {
-  string a, b;
-  cin >> a >> b;
-  Hash7 ha(a), hb(b);
-  cout << (ha < hb) << '\n';  
-}
+typedef MyHash<1000000021, 31> Hash21;
+typedef MyHash<1000000033, 31> Hash33;
+typedef MyHash<1000000087, 31> Hash87;
+typedef MyHash<1000000093, 31> Hash93;
+typedef MyHash<1000000097, 31> Hash97;
