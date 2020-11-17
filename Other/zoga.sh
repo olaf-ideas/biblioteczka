@@ -1,3 +1,5 @@
+#!/bin/bash
+# manjaro simps: sudo python -Sy time
 MEM_LIMIT=512 # in megabytes
 TIME_LIMIT=12 # in seconds
 for((i=1; ; i++)); do
