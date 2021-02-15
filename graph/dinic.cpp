@@ -3,7 +3,7 @@
  * License: CC0
  * Description: Dinic algorithm for max flow problem
  * Status: tested
- * Complexity: O(n * m * log max capasity)
+ * Complexity: O(n * m * log max capacity)
  * Link: 
  */
 
